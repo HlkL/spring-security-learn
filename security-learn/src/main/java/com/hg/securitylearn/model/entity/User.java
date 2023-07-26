@@ -1,5 +1,7 @@
 package com.hg.securitylearn.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,21 +18,23 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("sys_user")
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = -7196897627323669923L;
     /**
      * 主键
      */
+    @TableId
     private Long id;
     /**
      * 用户名
      */
-    private String userName;
+    private String username;
     /**
      * 昵称
      */
-    private String nickName;
+    private String nickname;
     /**
      * 密码
      */
