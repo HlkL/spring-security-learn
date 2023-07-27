@@ -1,4 +1,4 @@
-package com.hg.securitylearn.util;
+package com.hg.securitylearn.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.BoundSetOperations;
