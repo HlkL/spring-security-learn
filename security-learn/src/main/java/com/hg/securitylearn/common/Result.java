@@ -2,12 +2,19 @@ package com.hg.securitylearn.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * @author hougen
  */
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Result<T> {
+public class Result<T> implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 7543105755720188126L;
     /**
      * 状态码
      */
@@ -34,6 +41,13 @@ public class Result<T> {
     public static <T> Result<T> success(Integer code, T data) {
         Result<T> re = new Result<>();
         re.code = code;
+        re.data = data;
+        return re;
+    }
+
+    public static <T> Result<T> success(T data) {
+        Result<T> re = new Result<>();
+        re.code = ResultEnums.SUCCESS.code;
         re.data = data;
         return re;
     }
