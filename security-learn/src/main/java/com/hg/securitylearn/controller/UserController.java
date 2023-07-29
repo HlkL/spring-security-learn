@@ -17,13 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/login")
-public class LoginController {
+@RequestMapping("/user")
+public class UserController {
     private final UserLoginService userLoginService;
 
-    @PostMapping
+    @PostMapping("/login")
     public Result<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         UserLoginResponse result = userLoginService.login(request);
         return Result.success(result);
+    }
+
+    @PostMapping("/logout")
+    public Result<Boolean> logout() {
+        boolean result = userLoginService.logout();
+        return Result.auto(result);
     }
 }

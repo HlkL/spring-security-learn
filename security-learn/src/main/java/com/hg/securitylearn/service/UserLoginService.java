@@ -14,4 +14,11 @@ public interface UserLoginService {
      * @return {@link UserLoginResponse}
      */
     UserLoginResponse login(UserLoginRequest request);
+
+    /**
+     * 退出登陆
+     *
+     * @return boolean
+     */
+    boolean logout();
 }
