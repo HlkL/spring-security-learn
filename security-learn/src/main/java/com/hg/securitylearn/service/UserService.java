@@ -6,5 +6,5 @@ import com.hg.securitylearn.model.entity.User;
 /**
  * @author hougen
  */
-public interface IUserService extends IService<User> {
+public interface UserService extends IService<User> {
 }

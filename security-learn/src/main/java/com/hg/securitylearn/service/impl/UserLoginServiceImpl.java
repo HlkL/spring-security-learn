@@ -46,7 +46,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 
         // 使用jwt加密用户id,存放到redis中
         String token = JwtUtils.createJwt(userOptional.get().getId().toString());
-        redisCacheBean.setCacheObject(userOptional.get().getId().toString(), token);
+        redisCacheBean.setCacheObject(userOptional.get().getId().toString(), userOptional.get());
 
         return UserLoginResponse.builder()
                 .username(userOptional.get().getUsername())
