@@ -14,17 +14,16 @@ import java.nio.charset.StandardCharsets;
 /**
  * Redis使用FastJson序列化
  *
- * @author hougen
+ * @author sg
  */
 public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    private final Class<T> clazz;
 
     static {
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
     }
-
-    private final Class<T> clazz;
 
     public FastJsonRedisSerializer(Class<T> clazz) {
         super();
@@ -41,7 +40,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
     @Override
     public T deserialize(byte[] bytes) throws SerializationException {
-        if (bytes == null || bytes.length == 0) {
+        if (bytes == null || bytes.length <= 0) {
             return null;
         }
         String str = new String(bytes, DEFAULT_CHARSET);

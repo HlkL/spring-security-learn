@@ -3,7 +3,6 @@ package com.hg.securitylearn.service.impl;
 import com.hg.securitylearn.common.RedisCacheBean;
 import com.hg.securitylearn.model.dto.UserLoginResponse;
 import com.hg.securitylearn.model.entity.LoginUser;
-import com.hg.securitylearn.model.entity.User;
 import com.hg.securitylearn.model.vo.UserLoginRequest;
 import com.hg.securitylearn.service.UserLoginService;
 import com.hg.securitylearn.util.JwtUtils;
@@ -27,7 +26,6 @@ public class UserLoginServiceImpl implements UserLoginService {
     private final AuthenticationManager authenticationManager;
     private final RedisCacheBean redisCacheBean;
 
-
     @Override
     public UserLoginResponse login(UserLoginRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken = new
@@ -35,10 +33,9 @@ public class UserLoginServiceImpl implements UserLoginService {
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
         // 获取用户信息
-        Optional<User> userOptional = Optional.ofNullable(authenticate.getPrincipal())
+        Optional<LoginUser> userOptional = Optional.ofNullable(authenticate.getPrincipal())
                 .filter(principal -> principal instanceof LoginUser)
-                .map(principal -> (LoginUser) principal)
-                .map(LoginUser::getUser);
+                .map(principal -> (LoginUser) principal);
 
         if (userOptional.isEmpty()) {
             log.error("用户登陆失败");
@@ -46,8 +43,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
 
         // 使用jwt加密用户id,存放到redis中
-        String token = JwtUtils.createJwt(userOptional.get().getId().toString());
-        redisCacheBean.setCacheObject(userOptional.get().getId().toString(), userOptional.get());
+        String token = JwtUtils.createJwt(userOptional.get().getUser().getId().toString());
 
         return UserLoginResponse.builder()
                 .username(userOptional.get().getUsername())
@@ -61,7 +57,8 @@ public class UserLoginServiceImpl implements UserLoginService {
         if (authentication instanceof UsernamePasswordAuthenticationToken auth) {
             LoginUser loginUser = (LoginUser) auth.getPrincipal();
             // 删除 redis 中的用户信息
-            return redisCacheBean.deleteObject(loginUser.getUser().getId().toString());
+//            return redisCacheBean.deleteObject(loginUser.getUser().getId().toString());
+            return true;
         }
         return false;
     }

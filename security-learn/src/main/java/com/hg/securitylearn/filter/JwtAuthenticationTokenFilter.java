@@ -1,6 +1,7 @@
 package com.hg.securitylearn.filter;
 
 import com.hg.securitylearn.common.RedisCacheBean;
+import com.hg.securitylearn.mapper.UserMapper;
 import com.hg.securitylearn.model.entity.LoginUser;
 import com.hg.securitylearn.model.entity.User;
 import com.hg.securitylearn.util.JwtUtils;
@@ -17,6 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,6 +31,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private final RedisCacheBean redisCacheBean;
+    private final UserMapper userMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -50,15 +54,17 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             throw new RuntimeException(e);
         }
 
-        // 获取redis中的用户信息
-        User user = redisCacheBean.getCacheObject(userId);
+        // 获取用户信息
+        User user = userMapper.selectById(userId);
         if (Objects.isNull(user)) {
             throw new RuntimeException("用户信息不存在");
         }
 
-        // TODO 用户身份权限设置
+        List<String> auth = Arrays.asList("hello", "user");
+        LoginUser loginUser = new LoginUser(user, auth);
+        // 用户身份权限设置
         UsernamePasswordAuthenticationToken authenticationToken = new
-                UsernamePasswordAuthenticationToken(new LoginUser(user), null, null);
+                UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         // 将用户信息存入 securityContextHolder 中
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
