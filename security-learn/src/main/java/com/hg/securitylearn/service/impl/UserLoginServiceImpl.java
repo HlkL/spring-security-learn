@@ -1,6 +1,5 @@
 package com.hg.securitylearn.service.impl;
 
-import com.hg.securitylearn.common.RedisCacheBean;
 import com.hg.securitylearn.model.dto.UserLoginResponse;
 import com.hg.securitylearn.model.entity.LoginUser;
 import com.hg.securitylearn.model.vo.UserLoginRequest;
@@ -24,7 +23,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserLoginServiceImpl implements UserLoginService {
     private final AuthenticationManager authenticationManager;
-    private final RedisCacheBean redisCacheBean;
 
     @Override
     public UserLoginResponse login(UserLoginRequest request) {

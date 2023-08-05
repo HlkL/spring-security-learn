@@ -1,6 +1,6 @@
 package com.hg.securitylearn.filter;
 
-import com.hg.securitylearn.common.RedisCacheBean;
+import com.hg.securitylearn.mapper.MenuMapper;
 import com.hg.securitylearn.mapper.UserMapper;
 import com.hg.securitylearn.model.entity.LoginUser;
 import com.hg.securitylearn.model.entity.User;
@@ -18,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,8 +29,8 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
-    private final RedisCacheBean redisCacheBean;
     private final UserMapper userMapper;
+    private final MenuMapper menuMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -59,8 +58,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (Objects.isNull(user)) {
             throw new RuntimeException("用户信息不存在");
         }
-
-        List<String> auth = Arrays.asList("hello", "user");
+        // 权限查询
+        List<String> auth = menuMapper.selectPermsByUserId(user.getId());
         LoginUser loginUser = new LoginUser(user, auth);
         // 用户身份权限设置
         UsernamePasswordAuthenticationToken authenticationToken = new

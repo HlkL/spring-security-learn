@@ -1,6 +1,7 @@
 package com.hg.securitylearn.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.hg.securitylearn.mapper.MenuMapper;
 import com.hg.securitylearn.mapper.UserMapper;
 import com.hg.securitylearn.model.entity.LoginUser;
 import com.hg.securitylearn.model.entity.User;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +23,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserMapper userMapper;
+    private final MenuMapper menuMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -33,9 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (Objects.isNull(user)) {
             throw new RuntimeException("用户不存在");
         }
-
-        // 是否拥有对应的权限,设置用户相关权限
-        List<String> auth = Arrays.asList("hello", "user");
+        // 权限查询
+        List<String> auth = menuMapper.selectPermsByUserId(user.getId());
         return new LoginUser(user, auth);
     }
 }
