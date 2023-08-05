@@ -40,9 +40,8 @@ public class UserLoginServiceImpl implements UserLoginService {
             return new UserLoginResponse();
         }
 
-        // 使用jwt加密用户id,存放到redis中
+        // 使用jwt加密用户id
         String token = JwtUtils.createJwt(userOptional.get().getUser().getId().toString());
-
         return UserLoginResponse.builder()
                 .username(userOptional.get().getUsername())
                 .token(token)

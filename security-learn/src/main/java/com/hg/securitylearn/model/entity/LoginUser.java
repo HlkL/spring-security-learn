@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
 import java.util.Collection;
@@ -41,6 +42,10 @@ public class LoginUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (Objects.nonNull(this.authoritySet)) {
             return this.authoritySet;
+        }
+
+        if (CollectionUtils.isEmpty(this.permissions)) {
+            return null;
         }
 
         // 封装用户权限信息
