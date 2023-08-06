@@ -23,4 +23,12 @@ public class HelloController {
     public String world() {
         return "hello,world";
     }
+
+    @GetMapping("/customize")
+    @PreAuthorize("@ces.authority('hello')")
+    public String customize() {
+        return "customize";
+    }
+
+
 }
